@@ -78,7 +78,7 @@ static const char not_found[] = "HTTP/1.0 404 NOT FOUND\r\nContent-Type: text/ht
 int main(int argc, char *argv[])
 {
 	int port = 5000;
-	char filename[100], ip[20];
+	char filename[100] = {}, ip[20] = {};
 	int opt;
 	char optString;
 	int nparsed = 0;
@@ -105,7 +105,16 @@ int main(int argc, char *argv[])
 
         opt = getopt( argc, argv, "h:p:d:" );
     }
-
+    int i = 0;
+    char tt[] = "/";
+    while(i < 100)
+    {
+    	if(filename[i] == 0)
+    	{
+    		filename[i] = tt[0];
+    		break;
+    	}
+    }
     cout << filename << endl;
 
     pid_t parpid;
@@ -199,6 +208,7 @@ int main(int argc, char *argv[])
 			memset(buf, 0, sizeof(buf) - 1);
 			ssize_t rd = read(fd, buf, 1000);
 			cout << "readed: " << rd << " " << buf << endl;
+			strcat (buf,filename);
 			sprintf(sendbuf, templ, rd, buf);
 			cout << "send: " << sendbuf << endl;
 			send(connfd, sendbuf, strlen(sendbuf), MSG_NOSIGNAL);
