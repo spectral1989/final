@@ -100,7 +100,7 @@ int main(int argc, char *argv[])
                 break;
 
             case 'd':
-                memcpy(filename, optarg, 99);
+                strcpy(filename, optarg);
                 break;
         }
 
