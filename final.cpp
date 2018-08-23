@@ -201,13 +201,14 @@ int main(int argc, char *argv[])
 		 */
 		nparsed = http_parser_execute(parser, &settings, buf, recv_size);
 
-		cout << "filename: " << my_data->filename.c_str() << endl;
+
 
 		memset(buf, 0, sizeof(buf) - 1);
 		strcpy (buf,filename);
 		strcat (buf,my_data->filename.c_str());
+		cout << "filename: " << buf << endl;
 		int fd = open(buf, O_RDONLY);
-
+		cout << "fd: " << fd << endl;
 		if(fd > 0)
 		{
 			memset(buf, 0, sizeof(buf) - 1);
