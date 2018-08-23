@@ -128,6 +128,13 @@ void slave_send_to_worker(struct ev_loop *loop, struct ev_io *w, int revents)
     safe_push_back(slave_socket);
 }
 
+int is_regular_file(const char *path)
+{
+    struct stat path_stat;
+    stat(path, &path_stat);
+    return S_ISREG(path_stat.st_mode);
+}
+
 void process_slave_socket(int slave_socket)
 {
     // recv from slave socket
@@ -161,7 +168,7 @@ void process_slave_socket(int slave_socket)
 
     char reply[1024];
     int fd;
-    if(access(full_path.c_str(), F_OK) != -1)
+    if(access(full_path.c_str(), F_OK) != -1 && is_regular_file(full_path.c_str()) == 0)
     	fd = open(full_path.c_str(), O_RDONLY);
     if (fd > 0)
     {
