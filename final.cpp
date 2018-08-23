@@ -78,7 +78,7 @@ static const char not_found[] = "HTTP/1.0 404 NOT FOUND\r\nContent-Type: text/ht
 int main(int argc, char *argv[])
 {
 	int port = 5000;
-	char filename[100] = "/home/volodya";
+	char filename[100] = {};
 //	char filename[100] = {};
 	char ip[20] = "127.0.0.1";
 	int opt;
@@ -101,6 +101,7 @@ int main(int argc, char *argv[])
                 break;
 
             case 'd':
+            	memset(filename, 0, sizeof(filename));
                 strcpy(filename, optarg);
                 break;
         }
