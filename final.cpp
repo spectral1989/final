@@ -229,7 +229,7 @@ void process_slave_socket(int slave_socket)
                 p += bytes_written;
             }
         }
-        std::cout << "end: " << std::endl;
+        //std::cout << "end: " << std::endl;
 
         close(fd);
     }
