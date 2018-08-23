@@ -78,7 +78,8 @@ static const char not_found[] = "HTTP/1.0 404 NOT FOUND\r\nContent-Type: text/ht
 int main(int argc, char *argv[])
 {
 	int port = 5000;
-	char filename[100] = {}, ip[20] = {};
+	char filename[100] = "/tmp";//{};
+	char ip[20] = {};
 	int opt;
 	char optString;
 	int nparsed = 0;
@@ -107,11 +108,12 @@ int main(int argc, char *argv[])
     }
     int i = 0;
     char tt[] = "/";
-    while(i < 100)
+    while(i++ < 100)
     {
     	if(filename[i] == 0)
     	{
-    		filename[i] = tt[0];
+    		if(filename[i-1] != tt[0])
+    			filename[i] = tt[0];
     		break;
     	}
     }
@@ -201,14 +203,18 @@ int main(int argc, char *argv[])
 
 		cout << "filename: " << my_data->filename.c_str() << endl;
 
-		int fd = open(my_data->filename.c_str(), O_RDONLY);
+		memset(buf, 0, sizeof(buf) - 1);
+		strcpy (buf,filename);
+		strcat (buf,my_data->filename.c_str());
+		int fd = open(buf, O_RDONLY);
 
 		if(fd > 0)
 		{
 			memset(buf, 0, sizeof(buf) - 1);
 			ssize_t rd = read(fd, buf, 1000);
 			cout << "readed: " << rd << " " << buf << endl;
-			strcat (buf,filename);
+//			strcat (buf,filename);
+//			strcpy (buf,filename);
 			sprintf(sendbuf, templ, rd, buf);
 			cout << "send: " << sendbuf << endl;
 			send(connfd, sendbuf, strlen(sendbuf), MSG_NOSIGNAL);
