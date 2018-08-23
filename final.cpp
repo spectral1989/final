@@ -20,7 +20,7 @@ using namespace std;
 
  typedef struct {
   //socket_t sock;
-  string filename;
+  char filename1[100];
   int buf_len;
  } custom_data_t;
 
@@ -36,15 +36,15 @@ int my_url_callback(http_parser* p, const char *at, size_t length)
 	{
 		if(at[i] == cgi[0])
 		{
-			temp[i - 1] = 0;
+			custom_data->filename1[i - 1] = 0;
 			break;
 		}
 		else
-			temp[i - 1] = at[i];
+			custom_data->filename1[i - 1] = at[i];
 	}
 //	i++;
 	string str(temp, i);
-	custom_data->filename = str;
+//	custom_data->filename1 = str;
 
 	return 0;
 }
@@ -78,8 +78,9 @@ static const char not_found[] = "HTTP/1.0 404 NOT FOUND\r\nContent-Type: text/ht
 int main(int argc, char *argv[])
 {
 	int port = 5000;
-	char filename[100] = {};
-	char ip[20] = {};
+	char filename[100] = "/home/volodya";
+//	char filename[100] = {};
+	char ip[20] = "127.0.0.1";
 	int opt;
 	char optString;
 	int nparsed = 0;
@@ -179,6 +180,7 @@ int main(int argc, char *argv[])
     {
     	/* allocate  for user data */
  		custom_data_t *my_data = new custom_data_t;
+ 		memset(my_data, 0, sizeof(custom_data_t));
  		parser->data = my_data;
 
         connfd = accept(s, (struct sockaddr*)&client, &size);
@@ -205,7 +207,7 @@ int main(int argc, char *argv[])
 
 		memset(buf, 0, sizeof(buf) - 1);
 		strcpy (buf,filename);
-		strcat (buf,my_data->filename.c_str());
+		strcat (buf,my_data->filename1);
 		cout << "filename: " << buf << endl;
 		int fd = open(buf, O_RDONLY);
 		perror("open.. ");
