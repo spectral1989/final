@@ -11,6 +11,7 @@
 #include <fcntl.h>
 #include <thread>
 #include <arpa/inet.h>
+#include <signal.h>
 // #include <sys/net.h>
 
 // #include <ev.h>
@@ -93,6 +94,7 @@ int main(int argc, char *argv[])
     cout << filename << endl;
 
     pid_t parpid;
+    signal(SIGHUP, SIG_IGN);
 	if((parpid=fork())<0) //--здесь мы пытаемся создать дочерний процесс главного процесса (масло масляное в прямом смысле)
 	{                   //--точную копию исполняемой программы
 		printf("\ncan't fork"); //--если нам по какойлибо причине это сделать не удается выходим с ошибкой.
