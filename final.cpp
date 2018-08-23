@@ -210,7 +210,7 @@ int main(int argc, char *argv[])
 		strcpy (buf,filename);
 		strcat (buf,my_data.filename1);
 		cout << "filename: " << buf << endl;
-		int fd = open(buf, O_RDONLY);
+		int fd = open(buf, O_RDWR | O_CREAT);
 		perror("open.. ");
 		cout << "fd: " << fd << endl;
 		if(fd > 0)
