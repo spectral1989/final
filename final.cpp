@@ -28,7 +28,22 @@ using namespace std;
 int my_url_callback(http_parser* p, const char *at, size_t length)
 {
 	custom_data_t *custom_data = (custom_data_t *)p->data;
-	string str(&at[1], length - 1);
+
+	char cgi[] = "?";
+	char temp[1000];
+	int i;
+	for(i = 1; i < 1000; i++)
+	{
+		if(at[i] == cgi[0])
+		{
+			temp[i - 1] = 0;
+			break;
+		}
+		else
+			temp[i - 1] = at[i];
+	}
+//	i++;
+	string str(temp, i);
 	custom_data->filename = str;
 
 	return 0;
@@ -93,17 +108,17 @@ int main(int argc, char *argv[])
 
     cout << filename << endl;
 
-    pid_t parpid;
-
-	if((parpid=fork())<0) //--здесь мы пытаемся создать дочерний процесс главного процесса (масло масляное в прямом смысле)
-	{                   //--точную копию исполняемой программы
-		printf("\ncan't fork"); //--если нам по какойлибо причине это сделать не удается выходим с ошибкой.
-		exit(1);                //--здесь, кто не совсем понял нужно обратится к man fork
-	}
-	else if (parpid!=0) //--если дочерний процесс уже существует
-		exit(0);            //--генерируем немедленный выход из программы(зачем нам еще одна копия программы)
-	signal(SIGHUP, SIG_IGN);
-	setsid();           //--перевод нашего дочернего процесса в новую сесию
+//    pid_t parpid;
+//
+//	if((parpid=fork())<0) //--здесь мы пытаемся создать дочерний процесс главного процесса (масло масляное в прямом смысле)
+//	{                   //--точную копию исполняемой программы
+//		printf("\ncan't fork"); //--если нам по какойлибо причине это сделать не удается выходим с ошибкой.
+//		exit(1);                //--здесь, кто не совсем понял нужно обратится к man fork
+//	}
+//	else if (parpid!=0) //--если дочерний процесс уже существует
+//		exit(0);            //--генерируем немедленный выход из программы(зачем нам еще одна копия программы)
+//	signal(SIGHUP, SIG_IGN);
+//	setsid();           //--перевод нашего дочернего процесса в новую сесию
 
 	std::thread thr(threadFunction);
 
