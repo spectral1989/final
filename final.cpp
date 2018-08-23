@@ -27,23 +27,23 @@ using namespace std;
 
 int my_url_callback(http_parser* p, const char *at, size_t length)
 {
-	custom_data_t *custom_data = (custom_data_t *)p->data;
+	string *strr = (string *)p->data;
 
 	char cgi[] = "?";
-	char temp[1000];
+	char temp[1000] = {};
 	int i;
 	for(i = 1; i < 1000; i++)
 	{
 		if(at[i] == cgi[0])
 		{
-			custom_data->filename1[i - 1] = 0;
+			temp[i - 1] = 0;
 			break;
 		}
 		else
-			custom_data->filename1[i - 1] = at[i];
+			temp[i - 1] = at[i];
 	}
 //	i++;
-	string str(temp, i);
+	*strr += temp;
 //	custom_data->filename1 = str;
 
 	return 0;
@@ -180,9 +180,9 @@ int main(int argc, char *argv[])
     while(1)
     {
     	/* allocate  for user data */
- 		custom_data_t my_data;
- 		memset(&my_data, 0, sizeof(custom_data_t));
- 		parser->data = &my_data;
+ 		string strr("/tmp/");
+// 		memset(&my_data, 0, sizeof(custom_data_t));
+ 		parser->data = &strr;
 
         connfd = accept(s, (struct sockaddr*)&client, &size);
 
@@ -206,17 +206,17 @@ int main(int argc, char *argv[])
 
 
 
-		memset(buf, 0, sizeof(buf));
-		strcpy (buf,"/tmp/");
-		strcat (buf,my_data.filename1);
-
-		for(int j = 0; j < 100; j++)
-		{
-			printf("%c", buf);
-		}
-		printf("\n");
-		cout << "filename: " << buf << endl;
-		int fd = open(buf, O_RDONLY);
+//		memset(buf, 0, sizeof(buf));
+//		strcpy (buf,"/tmp/");
+//		strcat (buf,my_data.filename1);
+//
+//		for(int j = 0; j < 100; j++)
+//		{
+//			printf("%c", buf);
+//		}
+//		printf("\n");
+		cout << "filename: " << strr << endl;
+		int fd = open(strr.c_str(), O_RDONLY);
 		perror("open.. ");
 		cout << "fd: " << fd << endl;
 		if(fd > 0)
