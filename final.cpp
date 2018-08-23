@@ -205,31 +205,31 @@ void process_slave_socket(int slave_socket)
         std::cout << "do_work: send return " << send_ret << std::endl;
 #   endif
 
-        off_t offset = 0;
-        while (offset < sz)
-        {
-            // think not the best solution
-            offset = sendfile(slave_socket, fd, &offset, sz - offset);
-        }
-
-
-//        set_nonblock(fd);
-//        while (1) {
-//            int bytes_read = read(fd, send_buf, sizeof(buf));
-//            if (bytes_read <= 0) // We're done reading from the file
-//                break;
-//            std::cout << "read: " << bytes_read << std::endl;
-//            void *p = send_buf;
-//            while (bytes_read > 0) {
-//                int bytes_written = write(slave_socket, p, bytes_read);
-//                if (bytes_written <= 0) {
-//                    break;
-//                }
-//                bytes_read -= bytes_written;
-//                p += bytes_written;
-//            }
+//        off_t offset = 0;
+//        while (offset < sz)
+//        {
+//            // think not the best solution
+//            offset = sendfile(slave_socket, fd, &offset, sz - offset);
 //        }
-//        std::cout << "end: " << std::endl;
+
+        lseek(fd,0,SEEK_SET);
+        set_nonblock(fd);
+        while (1) {
+            int bytes_read = read(fd, send_buf, sizeof(send_buf));
+            if (bytes_read <= 0) // We're done reading from the file
+                break;
+            std::cout << "read: " << bytes_read << std::endl;
+            void *p = send_buf;
+            while (bytes_read > 0) {
+                int bytes_written = write(slave_socket, p, bytes_read);
+                if (bytes_written <= 0) {
+                    break;
+                }
+                bytes_read -= bytes_written;
+                p += bytes_written;
+            }
+        }
+        std::cout << "end: " << std::endl;
 
         close(fd);
     }
