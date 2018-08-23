@@ -167,6 +167,7 @@ void process_slave_socket(int slave_socket)
 #endif
 
     char reply[1024];
+    char send_buf[1024] = {};
     int fd;
 //    if(access(full_path.c_str(), F_OK) != -1 && is_regular_file(full_path.c_str()) != 0)
     	fd = open(full_path.c_str(), O_RDONLY);
@@ -191,12 +192,29 @@ void process_slave_socket(int slave_socket)
         std::cout << "do_work: send return " << send_ret << std::endl;
 #   endif
 
-        off_t offset = 0;
-        while (offset < sz)
-        {
-            // think not the best solution
-            offset = sendfile(slave_socket, fd, &offset, sz - offset);
+//        off_t offset = 0;
+//        while (offset < sz)
+//        {
+//            // think not the best solution
+//            offset = sendfile(slave_socket, fd, &offset, sz - offset);
+//        }
+
+        while (1) {
+            int bytes_read = read(fd, send_buf, sizeof(buf));
+            if (bytes_read == 0) // We're done reading from the file
+                break;
+
+            void *p = send_buf;
+            while (bytes_read > 0) {
+                int bytes_written = write(slave_socket, p, bytes_read);
+                if (bytes_written <= 0) {
+                    // handle errors
+                }
+                bytes_read -= bytes_written;
+                p += bytes_written;
+            }
         }
+
         close(fd);
     }
     else
