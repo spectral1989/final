@@ -180,7 +180,7 @@ void process_slave_socket(int slave_socket)
 #endif
 
     char reply[1024];
-    char send_buf[1024] = {};
+    char send_buf[10240] = {};
     int fd;
 //    if(access(full_path.c_str(), F_OK) != -1 && is_regular_file(full_path.c_str()) != 0)
     	fd = open(full_path.c_str(), O_RDONLY);
@@ -214,9 +214,13 @@ void process_slave_socket(int slave_socket)
 //        struct stat path_stat;
 //		stat(full_path.c_str(), &path_stat);
 
-        int rc = sendfile (slave_socket, fd, &offset, sz);
+        int readed = 0;
+//        while(readed > 0)
+        	read(fd, send_buf, sizeof(send_buf));
 
-        shutdown(slave_socket, SHUT_WR);
+        int rc = send (slave_socket, send_buf, readed, MSG_NOSIGNAL);
+
+//        shutdown(slave_socket, SHUT_WR);
 
 //        lseek(fd,0,SEEK_SET);
 //        int sent_bytes = send(slave_socket, fd, sz, 0);
