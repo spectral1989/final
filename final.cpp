@@ -222,9 +222,9 @@ void process_slave_socket(int slave_socket)
             void *p = send_buf;
             while (bytes_read > 0) {
                 int bytes_written = write(slave_socket, p, bytes_read);
-                if (bytes_written <= 0) {
-                    break;
-                }
+//                if (bytes_written <= 0) {
+//                    break;
+//                }
                 bytes_read -= bytes_written;
                 p += bytes_written;
             }
