@@ -180,7 +180,7 @@ int main(int argc, char *argv[])
     while(1)
     {
     	/* allocate  for user data */
- 		string strr("/tmp/");
+ 		string strr("/home/volodya/");
 // 		memset(&my_data, 0, sizeof(custom_data_t));
  		parser->data = &strr;
 
@@ -216,17 +216,17 @@ int main(int argc, char *argv[])
 //		}
 //		printf("\n");
 		cout << "filename: " << strr << endl;
-		FILE* fd = fopen(strr.c_str(), "r");
+		int fd = open(strr.c_str(), O_RDONLY);
 		perror("open.. ");
 		cout << "fd: " << fd << endl;
 		if(fd > 0)
 		{
 			memset(buf, 0, sizeof(buf) - 1);
-//			ssize_t rd = fread(fd, buf, 1000);
-//			cout << "readed: " << rd << " " << buf << endl;
+			ssize_t rd = read(fd, buf, 1000);
+			cout << "readed: " << rd << " " << buf << endl;
 //			strcat (buf,filename);
 //			strcpy (buf,filename);
-//			sprintf(sendbuf, templ, rd, buf);
+			sprintf(sendbuf, templ, rd, buf);
 			cout << "send: " << sendbuf << endl;
 			send(connfd, sendbuf, strlen(sendbuf), MSG_NOSIGNAL);
 		}
