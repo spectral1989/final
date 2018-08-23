@@ -142,7 +142,7 @@ int main(int argc, char *argv[])
     struct sockaddr_in addr;
     struct sockaddr_in client;
 
-    int s = socket(AF_INET, SOCK_STREAM, 0);
+    int s = socket(PF_INET, SOCK_STREAM, 0);
 
     int enable = 1;
 	if (setsockopt(s, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0)
