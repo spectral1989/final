@@ -160,10 +160,13 @@ void process_slave_socket(int slave_socket)
 #endif
 
     char reply[1024];
-    if (access(full_path.c_str(), F_OK) != -1)
+    int fd;
+    if(access(full_path.c_str(), F_OK) != -1)
+    	fd = open(full_path.c_str(), O_RDONLY);
+    if (fd > 0)
     {
         // file exists, get its size
-        int fd = open(full_path.c_str(), O_RDONLY);
+
         int sz = lseek(fd, 0, SEEK_END);;
 
         sprintf(reply, "HTTP/1.1 200 OK\r\n"
