@@ -536,7 +536,7 @@ sock_fd_write(int sock, void *buf, ssize_t buflen, int fd)
 
     size = sendmsg(sock, &msg, 0);
 
-    close(fd);
+//    close(fd);
 
     if (size < 0)
         perror ("sendmsg");
