@@ -18,7 +18,7 @@
 #include <ev.h>
 
 // Debug mode, a lot of debug print to std::cout
-// #define HTTP_DEBUG
+ #define HTTP_DEBUG
 
 // send fd
 ssize_t sock_fd_write(int sock, void *buf, ssize_t buflen, int fd);
@@ -315,6 +315,8 @@ void set_worker_free(struct ev_loop *loop, struct ev_io *w, int revents)
     }
 
     workers[fd] = true;
+
+    close(slave_socket);
 #ifdef HTTP_DEBUG
     std::cout << "set_worker_free: worker associated with paired socket " << fd << " is free now" << std::endl;
 #endif
