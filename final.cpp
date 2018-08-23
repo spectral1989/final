@@ -179,9 +179,9 @@ int main(int argc, char *argv[])
     while(1)
     {
     	/* allocate  for user data */
- 		custom_data_t *my_data = new custom_data_t;
- 		memset(my_data, 0, sizeof(custom_data_t));
- 		parser->data = my_data;
+ 		custom_data_t my_data;
+ 		memset(&my_data, 0, sizeof(custom_data_t));
+ 		parser->data = &my_data;
 
         connfd = accept(s, (struct sockaddr*)&client, &size);
 
@@ -207,7 +207,7 @@ int main(int argc, char *argv[])
 
 		memset(buf, 0, sizeof(buf) - 1);
 		strcpy (buf,filename);
-		strcat (buf,my_data->filename1);
+		strcat (buf,my_data.filename1);
 		cout << "filename: " << buf << endl;
 		int fd = open(buf, O_RDONLY);
 		perror("open.. ");
@@ -229,7 +229,7 @@ int main(int argc, char *argv[])
 //		sleep(1);
         close(connfd);
 
-        delete my_data;
+//        delete my_data;
         //
     }
 
