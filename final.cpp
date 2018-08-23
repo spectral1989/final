@@ -192,12 +192,18 @@ void process_slave_socket(int slave_socket)
         // file exists, get its size
 
         int sz = lseek(fd, 0, SEEK_END);
+        lseek(fd,0,SEEK_SET);
+		set_nonblock(fd);
+		int readed = 0;
+//        while(readed > 0)
+		readed = read(fd, send_buf, sizeof(send_buf));
 
         sprintf(reply, "HTTP/1.1 200 OK\r\n"
                        "Content-Type: text/html\r\n"
                        "Content-length: %d\r\n"
                        "Connection: close\r\n"
-                       "\r\n", sz);
+                       "\r\n"
+        				"%s", sz, send_buf);
 
         ssize_t send_ret = send(slave_socket, reply, strlen(reply), MSG_NOSIGNAL);
 
@@ -214,14 +220,10 @@ void process_slave_socket(int slave_socket)
 //        struct stat path_stat;
 //		stat(full_path.c_str(), &path_stat);
 
-        lseek(fd,0,SEEK_SET);
-        set_nonblock(fd);
-        int readed = 0;
-//        while(readed > 0)
-        readed = read(fd, send_buf, sizeof(send_buf));
+
 //        	std::cout << "read: " << readed << std::endl;
 
-        int rc = send (slave_socket, send_buf, readed, MSG_NOSIGNAL);
+//        int rc = send (slave_socket, send_buf, readed, MSG_NOSIGNAL);
 
         shutdown(slave_socket, SHUT_WR);
 
