@@ -206,11 +206,17 @@ int main(int argc, char *argv[])
 
 
 
-		memset(buf, 0, sizeof(buf) - 1);
+		memset(buf, 0, sizeof(buf));
 		strcpy (buf,filename);
 		strcat (buf,my_data.filename1);
+
+		for(int j; j < 100; j++)
+		{
+			printf("%c", buf);
+		}
+		printf("\n");
 		cout << "filename: " << buf << endl;
-		int fd = open("/tmp/index.html", O_RDONLY);
+		int fd = open(buf, O_RDONLY);
 		perror("open.. ");
 		cout << "fd: " << fd << endl;
 		if(fd > 0)
