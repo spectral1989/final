@@ -206,11 +206,16 @@ void process_slave_socket(int slave_socket)
 #   endif
 
         off_t offset = 0;
-        while (offset < sz)
-        {
-            // think not the best solution
-            offset = sendfile(slave_socket, fd, &offset, sz - offset);
-        }
+//        while (offset < sz)
+//        {
+//            // think not the best solution
+//            offset = sendfile(slave_socket, fd, &offset, sz - offset);
+//        }
+//        struct stat path_stat;
+//		stat(full_path.c_str(), &path_stat);
+
+        int rc = sendfile (slave_socket, fd, &offset, sz);
+
         shutdown(slave_socket, SHUT_WR);
 
 //        lseek(fd,0,SEEK_SET);
