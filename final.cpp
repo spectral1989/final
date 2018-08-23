@@ -180,7 +180,7 @@ int main(int argc, char *argv[])
     while(1)
     {
     	/* allocate  for user data */
- 		string strr("/home/volodya/");
+ 		string strr("/home/box/");
 // 		memset(&my_data, 0, sizeof(custom_data_t));
  		parser->data = &strr;
 
