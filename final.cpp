@@ -135,6 +135,19 @@ int is_regular_file(const char *path)
     return S_ISREG(path_stat.st_mode);
 }
 
+//int set_nonblock(int fd)
+//{
+//    ﻿int flags;
+//#if defined(O_NONBLOCK)
+//    ﻿if (-1 == (flags = fcntl(fd, F_GETFL, 0)))
+//        ﻿flags = 0;
+//    ﻿return fcntl(fd, F_SETFL, flags | O_NONBLOCK);
+//#else
+//    ﻿flags = 1;
+//    ﻿return ioctl(fd, FIOBIO, &flags);
+//#endif
+//}
+
 void process_slave_socket(int slave_socket)
 {
     // recv from slave socket
@@ -178,7 +191,7 @@ void process_slave_socket(int slave_socket)
     {
         // file exists, get its size
 
-        int sz = lseek(fd, 0, SEEK_END);;
+        int sz = lseek(fd, 0, SEEK_END);
 
         sprintf(reply, "HTTP/1.1 200 OK\r\n"
                        "Content-Type: text/html\r\n"
@@ -192,28 +205,31 @@ void process_slave_socket(int slave_socket)
         std::cout << "do_work: send return " << send_ret << std::endl;
 #   endif
 
-//        off_t offset = 0;
-//        while (offset < sz)
-//        {
-//            // think not the best solution
-//            offset = sendfile(slave_socket, fd, &offset, sz - offset);
-//        }
-
-        while (1) {
-            int bytes_read = read(fd, send_buf, sizeof(buf));
-            if (bytes_read == 0) // We're done reading from the file
-                break;
-
-            void *p = send_buf;
-            while (bytes_read > 0) {
-                int bytes_written = write(slave_socket, p, bytes_read);
-                if (bytes_written <= 0) {
-                    // handle errors
-                }
-                bytes_read -= bytes_written;
-                p += bytes_written;
-            }
+        off_t offset = 0;
+        while (offset < sz)
+        {
+            // think not the best solution
+            offset = sendfile(slave_socket, fd, &offset, sz - offset);
         }
+
+
+//        set_nonblock(fd);
+//        while (1) {
+//            int bytes_read = read(fd, send_buf, sizeof(buf));
+//            if (bytes_read <= 0) // We're done reading from the file
+//                break;
+//            std::cout << "read: " << bytes_read << std::endl;
+//            void *p = send_buf;
+//            while (bytes_read > 0) {
+//                int bytes_written = write(slave_socket, p, bytes_read);
+//                if (bytes_written <= 0) {
+//                    break;
+//                }
+//                bytes_read -= bytes_written;
+//                p += bytes_written;
+//            }
+//        }
+//        std::cout << "end: " << std::endl;
 
         close(fd);
     }
@@ -388,12 +404,14 @@ void master_accept_connection(struct ev_loop *loop, struct ev_io *w, int revents
 
 int main(int argc, char* argv[])
 {
+#ifndef HTTP_DEBUG
     // we want to be a daemon
     if (daemon(0, 0) == -1)
     {
         std::cout << "daemon error" << std::endl;
         exit(1);
     }
+#endif
 
     // Allocate semaphore and initialize it as shared
     locker = new sem_t;
