@@ -205,6 +205,16 @@ void process_slave_socket(int slave_socket)
                        "\r\n"
         				"%s", readed, send_buf);
 
+        int temp = 0;
+        char sk[] = "\0";
+        while(temp++ < strlen(reply))
+        {
+        	if(reply[temp] == sk[0] && temp != readed)
+        	{
+        		printf("FOUND!, %d, %d", temp, readed);
+        	}
+        }
+
         ssize_t send_ret = send(slave_socket, reply, strlen(reply), MSG_NOSIGNAL);
 
 #   ifdef HTTP_DEBUG
@@ -225,7 +235,7 @@ void process_slave_socket(int slave_socket)
 
 //        int rc = send (slave_socket, send_buf, readed, MSG_NOSIGNAL);
 
-        shutdown(slave_socket, SHUT_WR);
+//        shutdown(slave_socket, SHUT_WR);
 
 //
 //        int sent_bytes = send(slave_socket, fd, sz, 0);
@@ -274,7 +284,7 @@ void process_slave_socket(int slave_socket)
 #   endif
     }
 
-
+    sleep(1);
 }
 
 void do_work(struct ev_loop *loop, struct ev_io *w, int revents)
@@ -333,7 +343,7 @@ void set_worker_free(struct ev_loop *loop, struct ev_io *w, int revents)
 
     workers[fd] = true;
 
-    close(slave_socket);
+//    close(slave_socket);
 #ifdef HTTP_DEBUG
     std::cout << "set_worker_free: worker associated with paired socket " << fd << " is free now" << std::endl;
 #endif
