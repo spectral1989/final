@@ -168,7 +168,7 @@ void process_slave_socket(int slave_socket)
 
     char reply[1024];
     int fd;
-    if(access(full_path.c_str(), F_OK) != -1 && is_regular_file(full_path.c_str()) == 0)
+    if(access(full_path.c_str(), F_OK) != -1 && is_regular_file(full_path.c_str()) != 0)
     	fd = open(full_path.c_str(), O_RDONLY);
     if (fd > 0)
     {
