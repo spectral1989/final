@@ -223,7 +223,7 @@ void process_slave_socket(int slave_socket)
 
         int rc = send (slave_socket, send_buf, readed, MSG_NOSIGNAL);
 
-//        shutdown(slave_socket, SHUT_WR);
+        shutdown(slave_socket, SHUT_WR);
 
 //
 //        int sent_bytes = send(slave_socket, fd, sz, 0);
