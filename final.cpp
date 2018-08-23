@@ -150,8 +150,8 @@ int main(int argc, char *argv[])
 
     addr.sin_family = AF_INET;
     addr.sin_port     = htons(port);
-    inet_pton(AF_INET, ip, &addr);
-    //addr.sin_addr.s_addr = inet_addr(ip);//INADDR_ANY;
+//    inet_pton(AF_INET, ip, &addr);
+    addr.sin_addr.s_addr = inet_addr(ip);//INADDR_ANY;
 
     if (bind(s, (struct sockaddr *)&addr, sizeof(addr)) != 0) {
             perror("bind");
