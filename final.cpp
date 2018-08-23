@@ -210,7 +210,7 @@ void process_slave_socket(int slave_socket)
 #   endif
     }
 
-    close(slave_socket);
+
 }
 
 void do_work(struct ev_loop *loop, struct ev_io *w, int revents)
@@ -522,6 +522,8 @@ sock_fd_write(int sock, void *buf, ssize_t buflen, int fd)
     }
 
     size = sendmsg(sock, &msg, 0);
+
+    close(fd);
 
     if (size < 0)
         perror ("sendmsg");
