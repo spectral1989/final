@@ -185,7 +185,6 @@ void process_slave_socket(int slave_socket)
             offset = sendfile(slave_socket, fd, &offset, sz - offset);
         }
 
-        close(fd);
     }
     else
     {
@@ -210,6 +209,7 @@ void process_slave_socket(int slave_socket)
         std::cout << "do_work: send return " << send_ret << std::endl;
 #   endif
     }
+    close(fd);
 }
 
 void do_work(struct ev_loop *loop, struct ev_io *w, int revents)
