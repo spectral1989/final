@@ -210,7 +210,7 @@ int main(int argc, char *argv[])
 		strcpy (buf,filename);
 		strcat (buf,my_data.filename1);
 
-		for(int j; j < 100; j++)
+		for(int j = 0; j < 100; j++)
 		{
 			printf("%d", buf);
 		}
