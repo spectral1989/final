@@ -212,7 +212,7 @@ int main(int argc, char *argv[])
 
 		for(int j; j < 100; j++)
 		{
-			printf("%c", buf);
+			printf("%d", buf);
 		}
 		printf("\n");
 		cout << "filename: " << buf << endl;
