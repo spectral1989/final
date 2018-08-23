@@ -179,7 +179,7 @@ void process_slave_socket(int slave_socket)
     std::cout << "==================================" << std::endl;
 #endif
 
-    char reply[1024];
+    char reply[10240] = {};
     char send_buf[10240] = {};
     int fd;
 //    if(access(full_path.c_str(), F_OK) != -1 && is_regular_file(full_path.c_str()) != 0)
@@ -191,9 +191,9 @@ void process_slave_socket(int slave_socket)
     {
         // file exists, get its size
 
-        int sz = lseek(fd, 0, SEEK_END);
-        lseek(fd,0,SEEK_SET);
-		set_nonblock(fd);
+//        int sz = lseek(fd, 0, SEEK_END);
+//        lseek(fd,0,SEEK_SET);
+//		set_nonblock(fd);
 		int readed = 0;
 //        while(readed > 0)
 		readed = read(fd, send_buf, sizeof(send_buf));
@@ -201,9 +201,9 @@ void process_slave_socket(int slave_socket)
         sprintf(reply, "HTTP/1.1 200 OK\r\n"
                        "Content-Type: text/html\r\n"
                        "Content-length: %d\r\n"
-                       "Connection: close\r\n"
+//                       "Connection: close\r\n"
                        "\r\n"
-        				"%s", sz, send_buf);
+        				"%s", readed, send_buf);
 
         ssize_t send_ret = send(slave_socket, reply, strlen(reply), MSG_NOSIGNAL);
 
