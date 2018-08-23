@@ -170,6 +170,9 @@ void process_slave_socket(int slave_socket)
     int fd;
     if(access(full_path.c_str(), F_OK) != -1 && is_regular_file(full_path.c_str()) != 0)
     	fd = open(full_path.c_str(), O_RDONLY);
+    else
+    	printf("NOT A FILE!\n");
+
     if (fd > 0)
     {
         // file exists, get its size
