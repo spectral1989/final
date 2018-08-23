@@ -214,15 +214,18 @@ void process_slave_socket(int slave_socket)
 //        struct stat path_stat;
 //		stat(full_path.c_str(), &path_stat);
 
+        lseek(fd,0,SEEK_SET);
+        set_nonblock(fd);
         int readed = 0;
 //        while(readed > 0)
-        	read(fd, send_buf, sizeof(send_buf));
+        readed = read(fd, send_buf, sizeof(send_buf));
+//        	std::cout << "read: " << readed << std::endl;
 
         int rc = send (slave_socket, send_buf, readed, MSG_NOSIGNAL);
 
 //        shutdown(slave_socket, SHUT_WR);
 
-//        lseek(fd,0,SEEK_SET);
+//
 //        int sent_bytes = send(slave_socket, fd, sz, 0);
 
 //        set_nonblock(fd);
