@@ -18,7 +18,7 @@
 #include <ev.h>
 
 // Debug mode, a lot of debug print to std::cout
-// #define HTTP_DEBUG
+ #define HTTP_DEBUG
 
 // send fd
 ssize_t sock_fd_write(int sock, void *buf, ssize_t buflen, int fd);
@@ -433,14 +433,14 @@ void master_accept_connection(struct ev_loop *loop, struct ev_io *w, int revents
 
 int main(int argc, char* argv[])
 {
-#ifndef HTTP_DEBUG
+//#ifndef HTTP_DEBUG
     // we want to be a daemon
     if (daemon(0, 0) == -1)
     {
         std::cout << "daemon error" << std::endl;
         exit(1);
     }
-#endif
+//#endif
 
     // Allocate semaphore and initialize it as shared
     locker = new sem_t;
